@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "D:/GitUpload/Weather-Forecasting-Website---WeatherWise"
+		},
+		{
+			"path": "../Static"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../venv"
+		}
+	],
+	"settings": {}
+}
