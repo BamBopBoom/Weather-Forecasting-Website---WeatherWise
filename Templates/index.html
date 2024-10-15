@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('forecasts') }}">Forecasts</a></li>
+            <li><a href="{{ url_for('radar') }}">Radar</a></li>
+            <li><a href="{{ url_for('news') }}">News</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Weather Dashboard</h1>
+        
+        <!-- Search Bar -->
+        <form action="{{ url_for('forecasts') }}" method="get" class="search">
+            <input type="text" name="location" placeholder="Search for a place" required>
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Weather Tiles -->
+        <div class="weather-tiles">
+            {% for weather in weather_data %}
+                {% if weather %}
+                    <a href="{{ url_for('forecasts', location=weather.name) }}" class="tile">
+                        <h3>{{ weather.name }}</h3>
+                        <p>{{ weather.main.temp }} °F</p>
+                        <p>{{ weather.weather[0].description | capitalize }}</p>
+                    </a>
+                {% else %}
+                    <div class="tile">
+                        <h3>Data not available</h3>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Country List -->
+        <div class="country-list">
+            <h2>Major Cities Weather</h2>
+            <ul>
+                <li><a href="{{ url_for('forecasts', location='London') }}">London</a></li>
+                <li><a href="{{ url_for('forecasts', location='New York') }}">New York</a></li>
+                <li><a href="{{ url_for('forecasts', location='Tokyo') }}">Tokyo</a></li>
+                <li><a href="{{ url_for('forecasts', location='Sydney') }}">Sydney</a></li>
+                <li><a href="{{ url_for('forecasts', location='Paris') }}">Paris</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

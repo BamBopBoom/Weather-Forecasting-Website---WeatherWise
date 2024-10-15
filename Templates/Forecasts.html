@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forecast for {{ current_weather.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('forecasts') }}">Forecasts</a></li>
+            <li><a href="{{ url_for('radar') }}">Radar</a></li>
+            <li><a href="{{ url_for('news') }}">News</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Weather Forecast for {{ current_weather.name }}</h1>
+        <p>Current Temperature: {{ current_weather.main.temp }} °F</p>
+        <p>Description: {{ current_weather.weather[0].description | capitalize }}</p>
+
+        <h2>5-Day Forecast</h2>
+        <div class="forecast-tiles">
+            {% for day in forecast_data %}
+                <div class="tile">
+                    <h3>{{ day.date }}</h3>
+                    <p>Temp: {{ day.temp }} °F</p>
+                    <p>{{ day.description | capitalize }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
