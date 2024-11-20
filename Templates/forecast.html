@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forecast for {{ current_weather.name }}</title>
+    <title>Weather Forecast</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <!-- NavBar -->
+
+    <!-- Navbar -->
     <nav class="navbar">
         <ul>
             <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('forecasts') }}">Forecasts</a></li>
+            <li><a href="{{ url_for('forecast') }}">Forecast</a></li>
             <li><a href="{{ url_for('radar') }}">Radar</a></li>
             <li><a href="{{ url_for('news') }}">News</a></li>
         </ul>
     </nav>
 
-    <div class="container">
-        <h1>Weather Forecast for {{ current_weather.name }}</h1>
-        <p>Current Temperature: {{ current_weather.main.temp }} °F</p>
-        <p>Description: {{ current_weather.weather[0].description | capitalize }}</p>
-
-        <h2>5-Day Forecast</h2>
-        <div class="forecast-tiles">
+    <div class="forecast-container">
+        <h2>5-Day Weather Forecast</h2>
+        {% if forecast_data %}
             {% for day in forecast_data %}
-                <div class="tile">
+                <div class="forecast-card">
                     <h3>{{ day.date }}</h3>
-                    <p>Temp: {{ day.temp }} °F</p>
-                    <p>{{ day.description | capitalize }}</p>
+                    <img src="http://openweathermap.org/img/wn/{{ day.icon }}@2x.png" alt="Weather icon">
+                    <p>Temperature: {{ day.temp }}°F</p>
+                    <p>Description: {{ day.description }}</p>
                 </div>
             {% endfor %}
-        </div>
+        {% else %}
+            <p>No forecast data available.</p>
+        {% endif %}
     </div>
+
 </body>
 </html>
