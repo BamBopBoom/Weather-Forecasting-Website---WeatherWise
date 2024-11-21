@@ -50,6 +50,8 @@ def fetch_current_weather(city):
     return None
 
 # Helper function to fetch 5-day forecast data for a given city
+# Helper function to fetch 5-day forecast data for a given city
+# Helper function to fetch 5-day forecast data for a given city
 def fetch_forecast_data(city):
     params = {
         'q': city,
@@ -59,21 +61,28 @@ def fetch_forecast_data(city):
     response = requests.get(FORECAST_URL, params=params)
     if response.status_code == 200:
         forecast_data = response.json()
-        # Format forecast data (one entry per day)
+        # Format forecast data (group by day)
         formatted_forecast = []
+        seen_dates = set()  # Keep track of dates we've already processed
+        
         for day in forecast_data['list']:
             date_str = day['dt_txt']
             date_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-            formatted_date = date_obj.strftime('%A')  # Day of the week
+            formatted_date = date_obj.strftime('%A, %B %d, %Y')  # Format as "Thursday, January 01, 2024"
+            
+            if formatted_date not in seen_dates:
+                # Add each day's forecast data to the list
+                formatted_forecast.append({
+                    'date': formatted_date,
+                    'temp': day['main']['temp'],
+                    'description': day['weather'][0]['description'],
+                    'icon': day['weather'][0]['icon']  # Add icon information
+                })
+                seen_dates.add(formatted_date)  # Mark this date as processed
 
-            # Add each day's forecast data to the list
-            formatted_forecast.append({
-                'date': formatted_date,
-                'temp': day['main']['temp'],
-                'description': day['weather'][0]['description']
-            })
         return formatted_forecast
     return None
+
 
 # Route for the forecast page
 @app.route('/forecast', methods=['GET', 'POST'])
@@ -94,6 +103,7 @@ def forecast():
         forecast_data = []
 
     return render_template('forecast.html', current_weather=current_weather, forecast_data=forecast_data)
+
 
 # Route for the radar page (current weather and air quality)
 @app.route('/radar', methods=['GET'])
@@ -141,5 +151,5 @@ def news_country(country):
     return render_template('news_country.html', country=country)
 
 # Main execution
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)

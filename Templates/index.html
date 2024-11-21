@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Forecasting</title>
+    <title>Weather Forecast</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -24,7 +24,6 @@
         <div class="search-container">
             <div class="search-box">
                 <h2>Find Weather by Location</h2>
-                <!-- Search Form -->
                 <form action="{{ url_for('forecast') }}" method="get">
                     <input type="text" name="location" placeholder="Enter city" required>
                     <button type="submit">Search</button>
@@ -37,12 +36,16 @@
             <h2>Weather Forecasts</h2>
             {% if weather_data %}
                 {% for city_weather in weather_data %}
-                    <div class="forecast-card">
-                        <h3><a href="{{ url_for('forecast', location=city_weather.name) }}">{{ city_weather.name }}</a></h3>
-                        <p>Temperature: {{ city_weather.main.temp }}°F</p>
-                        <p>Description: {{ city_weather.weather[0].description }}</p>
-                        <img src="http://openweathermap.org/img/wn/{{ city_weather.weather[0].icon }}@2x.png" alt="Weather icon">
-                    </div>
+                    {% if city_weather %}
+                        <div class="forecast-card">
+                            <h3><a href="{{ url_for('forecast', location=city_weather.name) }}">{{ city_weather.name }}</a></h3>
+                            <p>Temperature: {{ city_weather.main.temp }}°F</p>
+                            <p>Description: {{ city_weather.weather[0].description }}</p>
+                            <img src="http://openweathermap.org/img/wn/{{ city_weather.weather[0].icon }}@2x.png" alt="Weather icon">
+                        </div>
+                    {% else %}
+                        <p>Weather data for this city is unavailable.</p>
+                    {% endif %}
                 {% endfor %}
             {% else %}
                 <p>No weather data available. Please check the city names or try again later.</p>
